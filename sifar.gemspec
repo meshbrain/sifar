@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/sifar.rb",
+    "sifar.gemspec",
     "spec/sifar_spec.rb",
     "spec/spec_helper.rb"
   ]
