@@ -1,19 +1,103 @@
-= sifar
+= Sifar
 
-Description goes here.
+Sifar can be used to check for strong passwords. Apart from the standard tests for length and homogeneity, it can check passwords that sound and spell similar to a given word.
 
-== Contributing to sifar
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+Sifar can also generate passwords that satisfy the same criteria.
+
+== Upgrade Notes
+
+Version 0.2.0 is a complete rewrite. Please check usage before upgrading.
+
+== Installation
+
+=== Requirements
+
+You need the text gem. This is installed automatically if Sifar is installed as a gem. More information on sifar can be found at https://github.com/threedaymonk/text.
+
+Sifar has been tested only on *nix systems.
+
+=== As a gem
+
+Install the gem:
+
+  > sudo gem install sifar
+
+To use the Sifar gem with bundler, add the following line in your Gemfile:
+
+  gem 'sifar'
+
+=== As a Rails plugin
+
+To add Sifar as a plugin in a Rails application, run the following command from your application root:
+
+  > ./script/plugin install git@github.com:meshbrain/sifar.git
+  
+== Validate
+
+  require 'sifar'
+  checker = Sifar.new ...
+  p checker.errors unless checker.check(word)
+  
+== Generate
+
+  require 'sifar'
+  checker = Sifar.new ...
+  password = checker.generate
+
+== Checks
+
+Any check can be used in combination with others.
+
+=== Minimum length
+
+Password should be at least x characters long.
+
+  checker = Sifar.new :minimum_length => 8
+  checker.check('pword')                        # => false
+  checker.check('password')                     # => true
+  checker.check('longpassword')                 # => true
+
+=== Heterogeneous passwords
+
+Password should contain a mix of digits, uppercase and lowercase characters.
+
+  checker = Sifar.new :heterogeneous => true
+  checker.check('password')                     # => false
+  checker.check('Pa55w0rD')                     # => true
+
+=== Dictionary passwords
+
+Password should not contain any word from a given file.
+
+  checker = Sifar.new :dictionary => '/path/to/dictionary'
+  checker.check('indictionary')                 # => false
+
+=== Reject specific characters
+
+Password should not contain any character from a given set.
+
+  checker = Sifar.new :character_blacklist => %w(& % $)
+  checker.check('pass%word')                    # => false
+
+=== Passwords that spell similar to a given name
+
+Levenshtein distance of two words should be more than a given threshold. :name is mandatory.
+
+  checker = Sifar.new :similarity => 1, :name => 'shoeman'
+  checker.check('showman')                      # => false
+  checker.check('anothershowman')               # => false
+  checker.check('password')                     # => true
+
+=== Words that sound similar to a given name
+
+Phonetic similarity of two words should be more than a given threshold. :name is mandatory.
+
+  checker = Sifar.new :phonetic_similarity => 1, :name => 'suman'
+  checker.check('showman')                      # => false
+  checker.check('password')                     # => true
+
+NOTE: This check uses metaphone; and might not work as expected in all languages.
 
 == Copyright
 
-Copyright (c) 2011 Suman Debnath. See LICENSE.txt for
-further details.
-
+Copyright (c) 2011 Suman Debnath. See LICENSE for details.
