@@ -2,7 +2,7 @@
 
 Sifar can be used to check for strong passwords. Apart from the standard tests for length and homogeneity, it can check passwords that sound and spell similar to a given word.
 
-Sifar can also generate passwords that satisfy the same criteria.
+Sifar can also generate passwords that satisfy the given criteria.
 
 == Upgrade Notes
 
@@ -12,7 +12,7 @@ Version 0.2.0 is a complete rewrite. Please check usage before upgrading.
 
 === Requirements
 
-You need the text gem. This is installed automatically if Sifar is installed as a gem. More information on sifar can be found at https://github.com/threedaymonk/text.
+You need the text gem. This is installed automatically if Sifar is installed as a gem. More information on text can be found at https://github.com/threedaymonk/text.
 
 Sifar has been tested only on *nix systems.
 
@@ -32,23 +32,24 @@ To add Sifar as a plugin in a Rails application, run the following command from 
 
   > ./script/plugin install git@github.com:meshbrain/sifar.git
   
-== Validate
+== Usage
+=== Validate
 
   require 'sifar'
   checker = Sifar.new ...
   p checker.errors unless checker.check(word)
   
-== Generate
+=== Generate
 
   require 'sifar'
   checker = Sifar.new ...
   password = checker.generate
 
-== Checks
+=== Checks
 
-Any check can be used in combination with others.
+Checks can be used separately or in combination.
 
-=== Minimum length
+==== Minimum length
 
 Password should be at least x characters long.
 
@@ -57,7 +58,7 @@ Password should be at least x characters long.
   checker.check('password')                     # => true
   checker.check('longpassword')                 # => true
 
-=== Heterogeneous passwords
+==== Heterogeneous passwords
 
 Password should contain a mix of digits, uppercase and lowercase characters.
 
@@ -65,21 +66,21 @@ Password should contain a mix of digits, uppercase and lowercase characters.
   checker.check('password')                     # => false
   checker.check('Pa55w0rD')                     # => true
 
-=== Dictionary passwords
+==== Dictionary passwords
 
 Password should not contain any word from a given file.
 
   checker = Sifar.new :dictionary => '/path/to/dictionary'
   checker.check('indictionary')                 # => false
 
-=== Reject specific characters
+==== Reject specific characters
 
 Password should not contain any character from a given set.
 
   checker = Sifar.new :character_blacklist => %w(& % $)
   checker.check('pass%word')                    # => false
 
-=== Passwords that spell similar to a given name
+==== Passwords that spell similar to a given name
 
 Levenshtein distance of two words should be more than a given threshold. :name is mandatory.
 
@@ -88,7 +89,7 @@ Levenshtein distance of two words should be more than a given threshold. :name i
   checker.check('anothershowman')               # => false
   checker.check('password')                     # => true
 
-=== Words that sound similar to a given name
+==== Words that sound similar to a given name
 
 Phonetic similarity of two words should be more than a given threshold. :name is mandatory.
 
